@@ -12,3 +12,7 @@ class User(BaseModel):
     username : str
     password : str
     authorization : str
+
+class LoginCreds(BaseModel):
+    username:str
+    password:str

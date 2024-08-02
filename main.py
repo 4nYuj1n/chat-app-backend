@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-from verify_email import verify_email
 from base_model import *
 import otp_utils
 import user_utils
@@ -22,3 +21,7 @@ async def otp_verifier(otp:OTP):
 @app.post("/register")
 async def user_register(user:User):
     return user_utils.register_user(user)
+
+@app.post("/login")
+async def user_login(user:LoginCreds):
+    return user_utils.user_login(user)

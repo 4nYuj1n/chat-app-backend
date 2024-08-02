@@ -65,6 +65,15 @@ class db_connect:
         except Exception as err:
             return err
 
+    def select_username(self,username):
+        try:
+            q="SELECT * FROM user WHERE username=%s"
+            p=(username,)
+            self.cursor.execute(q,p)
+            return self.cursor.fetchall()[0]
+        except Exception as err:
+            return None,None,None,None
+
     def register_user(self,username,password,email,curr_time):
         try:
             id=self.get_max_id("user")

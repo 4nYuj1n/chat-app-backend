@@ -8,13 +8,16 @@ from datetime import datetime
 
 
 def get_otp_from_db(auth_token):
-    conn=db_utils.db_connect()
-    q="SELECT * FROM otp_verify_tbl WHERE verif_token = %s"
-    p=(auth_token,)
-    data=conn.select_data(q,p)
-    data=list(data[0])
-    return data[0],data[2],data[3],data[4]
-
+    try:
+        conn=db_utils.db_connect()
+        q="SELECT * FROM otp_verify_tbl WHERE verif_token = %s"
+        p=(auth_token,)
+        data=conn.select_data(q,p)
+        data=list(data[0])
+        return data[0],data[2],data[3],data[4]
+    except:
+        return None,None,None,None
+        
 def save_otp_to_db(email,token,OTP):
     conn=db_utils.db_connect()
     current_time = datetime.now()
@@ -55,6 +58,7 @@ def send_otp(email):
             raise Exception("failed saving otp")
 
     except Exception as err:
+        print(err)
         return{
             "code" : "200",
             "status" : "failed",
