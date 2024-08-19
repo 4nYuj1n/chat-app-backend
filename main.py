@@ -1,9 +1,10 @@
 from fastapi import FastAPI
-from verify_email import verify_email
 from model.base_model import *
-import service.otp as otp
+import service.otp_utils as otp_utils
 import auth.register as register
 from fastapi.responses import JSONResponse
+from service.generate_jwt import generate_jwt
+import json
 
 app = FastAPI()
 
@@ -14,12 +15,17 @@ async def root():
 
 @app.post("/send-email")
 async def email_verifier(email:Email):
-    return otp.send_otp(email.email)
+    content = otp_utils.send_otp(email.email)
+    
+    if content['status']=='success':
+        content.update({"jwt_bearer": generate_jwt({"email":email.email})})
+    response = JSONResponse(content=content)
+    return response
 
 
 @app.post("/verify-otp")
 async def otp_verifier(otp:OTP):
-    return otp.verify_otp(otp)
+    return otp_utils.verify_otp(otp)
     
 @app.post("/register")
 async def user_register(user:User):
@@ -28,6 +34,6 @@ async def user_register(user:User):
     response.set_cookie(key = "jwt_bearer", value = jwt_token )
     print(response)
 
-@app.port("/publish_key")
+@app.post("/publish_key")
 async def publish_key(keyBundle:KeyBundle):
     return "ya"

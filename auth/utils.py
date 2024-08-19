@@ -6,11 +6,12 @@ import os
 sys.path.insert(0, '../server')
 
 import db.database as database
-
+from db import check_uid
 def generate_uid():
-    conn=database.db_connect()
+    db=database.db_connect()
+    conn,cursor=db.get_conn_and_cursor()
     uid = secrets.token_hex(6)
     while True:
-        if len(conn.check_uid(uid)) == 0 :
+        if len(check_uid(cursor,uid)) == 0 :
             return uid
 

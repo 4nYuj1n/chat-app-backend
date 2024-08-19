@@ -6,7 +6,6 @@ class Email(BaseModel):
     
 class OTP(BaseModel):
     otp : str
-    authorization : str
 
 class User(BaseModel):
     username : str
