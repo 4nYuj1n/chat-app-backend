@@ -1,10 +1,12 @@
 from fastapi import FastAPI
 from verify_email import verify_email
-from base_model import *
-import otp_utils
-import user_utils
+from model.base_model import *
+import service.otp as otp
+import auth.register as register
+from fastapi.responses import JSONResponse
 
 app = FastAPI()
+
 
 @app.get("/ping")
 async def root():
@@ -12,13 +14,20 @@ async def root():
 
 @app.post("/send-email")
 async def email_verifier(email:Email):
-    return otp_utils.send_otp(email.email)
+    return otp.send_otp(email.email)
 
 
 @app.post("/verify-otp")
 async def otp_verifier(otp:OTP):
-    return otp_utils.verify_otp(otp)
+    return otp.verify_otp(otp)
     
 @app.post("/register")
 async def user_register(user:User):
-    return user_utils.register_user(user)
+    uid,content,jwt_token = register.register_user(user)
+    response = JSONResponse(content=content)
+    response.set_cookie(key = "jwt_bearer", value = jwt_token )
+    print(response)
+
+@app.port("/publish_key")
+async def publish_key(keyBundle:KeyBundle):
+    return "ya"
