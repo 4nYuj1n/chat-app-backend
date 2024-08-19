@@ -10,17 +10,17 @@ def register_user(user):
         uid=generate_uid()
         insert_user(uid,user.username,user.password,email,None,datetime.now())
 
-        return ({
+        return {
             "code" : "200",
             "status" : "success",
             "message" : "Sucessfully registered user"
-        },jwt_token)
+        }
     else:
-        return ({
+        return {
             "code" : "200",
             "status" : "failed",
             "message" : "Invalid authorization token"
-        },None)
+        }
 
     
 
