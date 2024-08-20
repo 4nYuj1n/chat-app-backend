@@ -7,7 +7,7 @@
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8mb4 */;
+/*!50503 SET NAMES utf8 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -18,10 +18,12 @@
 --
 -- Table structure for table `curve_prekey`
 --
+CREATE DATABASE quantum_chat;
+USE quantum_chat;
 
 DROP TABLE IF EXISTS `curve_prekey`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!50503 SET character_set_client = utf8 */;
 CREATE TABLE `curve_prekey` (
   `uid` varchar(40) NOT NULL,
   `key_value` text,
@@ -30,7 +32,7 @@ CREATE TABLE `curve_prekey` (
   `created_at` datetime DEFAULT NULL,
   PRIMARY KEY (`uid`),
   CONSTRAINT `curve_prekey_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `user` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -48,7 +50,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `friend_relation`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!50503 SET character_set_client = utf8 */;
 CREATE TABLE `friend_relation` (
   `uid1` varchar(40) NOT NULL,
   `uid2` varchar(40) DEFAULT NULL,
@@ -57,7 +59,7 @@ CREATE TABLE `friend_relation` (
   KEY `uid2` (`uid2`),
   CONSTRAINT `friend_relation_ibfk_1` FOREIGN KEY (`uid1`) REFERENCES `user` (`uid`),
   CONSTRAINT `friend_relation_ibfk_2` FOREIGN KEY (`uid2`) REFERENCES `user` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -75,14 +77,14 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `identity_key`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!50503 SET character_set_client = utf8 */;
 CREATE TABLE `identity_key` (
   `uid` varchar(40) NOT NULL,
   `key_value` text,
   `created_at` datetime DEFAULT NULL,
   PRIMARY KEY (`uid`),
   CONSTRAINT `identity_key_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `user` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -100,7 +102,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `message_sent`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!50503 SET character_set_client = utf8 */;
 CREATE TABLE `message_sent` (
   `uid1` varchar(40) NOT NULL,
   `uid2` varchar(40) DEFAULT NULL,
@@ -110,7 +112,7 @@ CREATE TABLE `message_sent` (
   KEY `uid2` (`uid2`),
   CONSTRAINT `message_sent_ibfk_1` FOREIGN KEY (`uid1`) REFERENCES `user` (`uid`),
   CONSTRAINT `message_sent_ibfk_2` FOREIGN KEY (`uid2`) REFERENCES `user` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -128,7 +130,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `one_time_curve_key`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!50503 SET character_set_client = utf8 */;
 CREATE TABLE `one_time_curve_key` (
   `uid` varchar(40) NOT NULL,
   `key_value` text,
@@ -137,7 +139,7 @@ CREATE TABLE `one_time_curve_key` (
   `created_at` datetime DEFAULT NULL,
   PRIMARY KEY (`uid`),
   CONSTRAINT `one_time_curve_key_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `user` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -155,7 +157,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `one_time_pq_key`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!50503 SET character_set_client = utf8 */;
 CREATE TABLE `one_time_pq_key` (
   `uid` varchar(40) NOT NULL,
   `key_value` text,
@@ -164,7 +166,7 @@ CREATE TABLE `one_time_pq_key` (
   `created_at` datetime DEFAULT NULL,
   PRIMARY KEY (`uid`),
   CONSTRAINT `one_time_pq_key_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `user` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -182,14 +184,14 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `otp_verify`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!50503 SET character_set_client = utf8 */;
 CREATE TABLE `otp_verify` (
   `id` int NOT NULL,
   `email` text,
   `otp` varchar(6) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -207,14 +209,14 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `pq_key`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!50503 SET character_set_client = utf8 */;
 CREATE TABLE `pq_key` (
   `uid` varchar(40) NOT NULL,
   `key_value` text,
   `created_at` datetime DEFAULT NULL,
   PRIMARY KEY (`uid`),
   CONSTRAINT `pq_key_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `user` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -232,7 +234,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!50503 SET character_set_client = utf8 */;
 CREATE TABLE `user` (
   `uid` varchar(40) NOT NULL,
   `username` text,
@@ -241,7 +243,7 @@ CREATE TABLE `user` (
   `profile_url` text,
   `created_at` datetime DEFAULT NULL,
   PRIMARY KEY (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -259,14 +261,14 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `user_register`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!50503 SET character_set_client = utf8 */;
 CREATE TABLE `user_register` (
   `id` int NOT NULL,
   `auth_token` text,
   `email` text,
   `created_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

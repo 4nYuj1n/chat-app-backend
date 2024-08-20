@@ -48,9 +48,17 @@ def send_otp(email):
         }
 
 def verify_otp(request,otp):
-    email = request.state.user['email']
+    email = request.state.user_data['email']
     id,email,db_otp,_=select_otp_verify(email)
-    if db_otp==otp.otp:
+    if id==None:
+
+        return{
+            "code" : "500",
+            "status" : "failed",
+            "messsage" : "failed verifying OTP",
+        }      
+    elif db_otp==otp.otp:
+
         delete_otp_verify(id)
         current_time=datetime.now()
         if insert_user_register(email,current_time) =="OK":

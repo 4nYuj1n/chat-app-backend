@@ -5,7 +5,11 @@ import auth.register as register
 from fastapi.responses import JSONResponse
 from service.generate_jwt import generate_jwt
 from middleware.jwt_handler import JWTAuthMiddleware
-import json
+from service.key_publish.verify_identity_key import verify_identity_key
+from service.key_publish.verify_key import verify_key
+
+from typing import Union
+
 
 app = FastAPI()
 
@@ -18,6 +22,7 @@ async def ping():
 @app.post("/send-email")
 async def email_verifier(email:Email):
     content = otp_utils.send_otp(email.email)
+
     return content
 
 
@@ -26,11 +31,16 @@ async def otp_verifier(request:Request,otp:OTP):
     return otp_utils.verify_otp(request,otp)
     
 @app.post("/register")
-async def user_register(user:User):
-    content = register.register_user(user)
-    response = JSONResponse(content=content)
+async def user_register(request:Request,user:User):
+    response = register.register_user(request,user)
     return response
 
-@app.post("/publish_key")
-async def publish_key(keyBundle:KeyBundle):
-    return "ya"
+@app.post("/publish-key")
+async def publish_key(request:Request,key_bundle:Union[IdentityKey,SignedKey]):
+    if isinstance(key_bundle,IdentityKey):
+        print(key_bundle)
+        response = verify_identity_key(request,key_bundle)
+        return response
+    elif isinstance(key_bundle,SignedKey):
+        response = verify_key(request,key_bundle)
+        return response

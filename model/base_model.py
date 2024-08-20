@@ -11,14 +11,12 @@ class User(BaseModel):
     username : str
     password : str
     profile_image : str
-    authorization : str
 
-class KeyBundle(BaseModel):
-    identityKey                         : str
-    curvePreKey                         : str
-    curvePreKeyIdentifier               : str
-    curvePreKeySignature                : str
-    lastResortPQKemPreKey               : str
-    lastResortPQKemPreKeyIdentifier     : str
-    oneTimePQKemPreKeySet               : str
-    oneTimePQKemPreKeyIdentifierSet     : str
+class IdentityKey(BaseModel):
+    identity_key:str
+
+class SignedKey(BaseModel):
+    type:int
+    key:str
+    identifier:str
+    signature:str

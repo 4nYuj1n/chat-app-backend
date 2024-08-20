@@ -1,11 +1,13 @@
 import db.database as database
-import bcrypt
-def insert_user(uid,username,password,email,profile_url,curr_time):
+from datetime import datetime
+
+def insert_curve_key(uid,key,identifier,signature):
     db=database.db_connect()
     conn,cursor=db.get_conn_and_cursor()
     try:
-        q="INSERT INTO user VALUES(%s,%s,%s,%s,%s,%s)"
-        p=(uid,username,email,bcrypt.hashpw(password.encode(), bcrypt.gensalt(16)),profile_url,curr_time)
+        curr=datetime.now()
+        q="INSERT INTO curve_prekey VALUES(%s,%s,%s,%s,%s)"
+        p=(uid,key,identifier,signature,curr)
         cursor.execute(q,p)
         conn.commit()
         return 'OK'

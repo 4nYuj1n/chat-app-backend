@@ -1,25 +1,36 @@
 
-from db import delete_user_register,select_user_register,insert_user
+from db.delete_user_register import delete_user_register
+from db.select_user_register import select_user_register
+from db.insert_user import insert_user
+from service.generate_jwt import generate_jwt
 from auth.utils import generate_uid
 from datetime import datetime
 import jwt
-def register_user(user):
-    _,auth_token,email,_ = select_user_register(user.authorization)
-    if auth_token==user.authorization:
-        delete_user_register(auth_token)
-        uid=generate_uid()
-        insert_user(uid,user.username,user.password,email,None,datetime.now())
-
+def register_user(request,user):
+    email = request.state.user_data['email']
+    _,email,_ = select_user_register(email)
+    if email==None:
+        return {
+            "code" : "500",
+            "status" : "failed",
+            "message" : "Failed registering user"
+        }
+        
+    uid=generate_uid()
+    if insert_user(uid,user.username,user.password,email,None,datetime.now()) == "OK":
+        delete_user_register(email)
+        jwt = generate_jwt({"uid":uid})
         return {
             "code" : "200",
             "status" : "success",
-            "message" : "Sucessfully registered user"
+            "message" : "Sucessfully registered user",
+            "Authorization" : jwt
         }
     else:
         return {
-            "code" : "200",
+            "code" : "500",
             "status" : "failed",
-            "message" : "Invalid authorization token"
+            "message" : "Failed registering user"
         }
 
     
