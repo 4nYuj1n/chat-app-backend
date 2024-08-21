@@ -59,7 +59,8 @@ def verify_otp(request,otp):
         }      
     elif db_otp==otp.otp:
 
-        delete_otp_verify(id)
+        temp = delete_otp_verify(id)
+        print(temp)
         current_time=datetime.now()
         if insert_user_register(email,current_time) =="OK":
             return{

@@ -2,7 +2,6 @@ import jwt
 from fastapi import Request
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
-from datetime import datetime,timedelta
 from service.generate_jwt import generate_jwt
 import json
 SECRET = "this_is_a_secret_token_indeed"
@@ -31,7 +30,7 @@ class JWTAuthMiddleware(BaseHTTPMiddleware):
             response_body = response_body.decode()
             response_body = json.loads(response_body)
 
-            #checking if JWT changed
+            #checking if JWT changed and put JWT
             if response_body != None and "Authorization" in response_body:
                 response=JSONResponse(content=response_body,headers={"Authorization":response_body["Authorization"]})
             else:

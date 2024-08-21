@@ -1,10 +1,10 @@
 from fastapi import FastAPI,Request
 from model.base_model import *
+
 import service.otp_utils as otp_utils
 import auth.register as register
-from fastapi.responses import JSONResponse
-from service.generate_jwt import generate_jwt
 from middleware.jwt_handler import JWTAuthMiddleware
+from service.key_publish.check_key import check_key
 from service.key_publish.verify_identity_key import verify_identity_key
 from service.key_publish.verify_key import verify_key
 
@@ -44,3 +44,8 @@ async def publish_key(request:Request,key_bundle:Union[IdentityKey,SignedKey]):
     elif isinstance(key_bundle,SignedKey):
         response = verify_key(request,key_bundle)
         return response
+
+@app.get("/check-key")
+async def check_key(request:Request,_type:int):
+    response = check_key(request,_type)
+    return response

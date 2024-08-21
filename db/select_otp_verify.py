@@ -7,6 +7,7 @@ def select_otp_verify(email):
     cursor.execute(q,p)
     data=cursor.fetchall()
     if len(data)!=0:
+        print(data[0])
         data=list(data[0])
         return data
     else:
