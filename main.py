@@ -1,5 +1,6 @@
 from fastapi import FastAPI,Request
 from model.base_model import *
+from fastapi.responses import JSONResponse
 
 import service.otp_utils as otp_utils
 import auth.register as register
@@ -7,7 +8,9 @@ from middleware.jwt_handler import JWTAuthMiddleware
 from service.key_publish.check_key import check_key
 from service.key_publish.verify_identity_key import verify_identity_key
 from service.key_publish.verify_key import verify_key
-
+from service.friends.get_friends import get_friends
+from service.user.profile import get_profile
+from auth.login import login_user
 from typing import Union
 
 
@@ -35,10 +38,15 @@ async def user_register(request:Request,user:User):
     response = register.register_user(request,user)
     return response
 
+@app.post("/login")
+async def user_login(request:Request,creds:LoginCreds):
+    response = login_user(request,creds)
+    return response
+
 @app.post("/publish-key")
 async def publish_key(request:Request,key_bundle:Union[IdentityKey,SignedKey]):
     if isinstance(key_bundle,IdentityKey):
-        print(key_bundle)
+
         response = verify_identity_key(request,key_bundle)
         return response
     elif isinstance(key_bundle,SignedKey):
@@ -48,4 +56,12 @@ async def publish_key(request:Request,key_bundle:Union[IdentityKey,SignedKey]):
 @app.get("/check-key")
 async def check_key(request:Request,_type:int):
     response = check_key(request,_type)
+    return response
+@app.get("/profile")
+async def profile(request:Request):
+    response = get_profile(request.state.user_data['username'])
+    return response
+@app.get("/find-friend")
+async def find_friend(request:Request,friend_username:str):
+    response = get_friends(friend_username)
     return response

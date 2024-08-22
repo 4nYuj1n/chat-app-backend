@@ -12,6 +12,10 @@ class User(BaseModel):
     password : str
     profile_image : str
 
+class LoginCreds(BaseModel):
+    email : str
+    password : str
+
 class IdentityKey(BaseModel):
     identity_key:str
 

@@ -20,11 +20,12 @@ def register_user(request,user):
     if insert_user(uid,user.username,user.password,email,None,datetime.now()) == "OK":
         delete_user_register(email)
         jwt = generate_jwt({"uid":uid})
+        print(jwt)
         return {
             "code" : "200",
             "status" : "success",
             "message" : "Sucessfully registered user",
-            "Authorization" : jwt
+            "authorization" : jwt
         }
     else:
         return {

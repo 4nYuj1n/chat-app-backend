@@ -1,15 +1,16 @@
-import jwt
 from fastapi import Request
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from service.generate_jwt import generate_jwt
 import json
+import jwt
+
 SECRET = "this_is_a_secret_token_indeed"
 
 class JWTAuthMiddleware(BaseHTTPMiddleware):
     async def dispatch(self,request:Request,call_next):
-        if request.url.path not in ["/ping","/send-email","/favicon.ico","/docs","/openapi.json"]:
-            auth_token = request.headers.get("Authorization")
+        if request.url.path not in ["/login","/ping","/send-email","/favicon.ico","/docs","/openapi.json"]:
+            auth_token = request.headers.get("authorization")
             try:
                 data=jwt.decode(
                     auth_token,
@@ -31,10 +32,12 @@ class JWTAuthMiddleware(BaseHTTPMiddleware):
             response_body = json.loads(response_body)
 
             #checking if JWT changed and put JWT
-            if response_body != None and "Authorization" in response_body:
-                response=JSONResponse(content=response_body,headers={"Authorization":response_body["Authorization"]})
+            if response_body != None and "authorization" in response_body:
+                _jwt = response_body["authorization"]
+                del response_body["authorization"]
+                response=JSONResponse(content=response_body,headers={"authorization":_jwt})
             else:
-                response=JSONResponse(content=response_body,headers={"Authorization":auth_token})
+                response=JSONResponse(content=response_body,headers={"authorization":auth_token})
             return response
             
         elif request.url.path in ["/send-email"] and request.method == "POST":
@@ -53,7 +56,9 @@ class JWTAuthMiddleware(BaseHTTPMiddleware):
 
             #checking if route succeed
             if response_body['status']=='success':
-                response_body.update({"Authorization": generate_jwt({"email":email})})
+                response_body.update({"authorization": generate_jwt({"email":email})})
             return JSONResponse(response_body)
         else:
-            return await call_next(request)
+            print(request.url.path)
+            response = await call_next(request)
+            return response
