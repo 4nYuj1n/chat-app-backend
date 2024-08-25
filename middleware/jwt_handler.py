@@ -11,6 +11,7 @@ class JWTAuthMiddleware(BaseHTTPMiddleware):
     async def dispatch(self,request:Request,call_next):
         if request.url.path not in ["/login","/ping","/send-email","/favicon.ico","/docs","/openapi.json"]:
             auth_token = request.headers.get("authorization")
+            print(auth_token)
             try:
                 data=jwt.decode(
                     auth_token,

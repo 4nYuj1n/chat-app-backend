@@ -1,4 +1,4 @@
-from fastapi import FastAPI,Request
+from fastapi import FastAPI,Request,WebSocket, WebSocketDisconnect
 from model.base_model import *
 from fastapi.responses import JSONResponse
 
@@ -11,42 +11,44 @@ from service.key_publish.verify_key import verify_key
 from service.friends.get_friends import get_friends
 from service.user.profile import get_profile
 from auth.login import login_user
+from service.friends.add_friend_relation import add_friend_relation
+from service.friends.get_friend_list import get_friend_list
 from typing import Union
-
+from service.websocket import ConnectionManager
 
 app = FastAPI()
+manager = ConnectionManager()
 
 app.add_middleware(JWTAuthMiddleware)
 
 @app.get("/ping")
-async def ping():
+async def _ping():
     return {"message": "pong"}
 
 @app.post("/send-email")
-async def email_verifier(email:Email):
+async def _email_verifier(email:Email):
     content = otp_utils.send_otp(email.email)
 
     return content
 
 
 @app.post("/verify-otp")
-async def otp_verifier(request:Request,otp:OTP):
+async def _otp_verifier(request:Request,otp:OTP):
     return otp_utils.verify_otp(request,otp)
     
 @app.post("/register")
-async def user_register(request:Request,user:User):
+async def _user_register(request:Request,user:User):
     response = register.register_user(request,user)
     return response
 
 @app.post("/login")
-async def user_login(request:Request,creds:LoginCreds):
+async def _user_login(request:Request,creds:LoginCreds):
     response = login_user(request,creds)
     return response
 
 @app.post("/publish-key")
-async def publish_key(request:Request,key_bundle:Union[IdentityKey,SignedKey]):
+async def _publish_key(request:Request,key_bundle:Union[IdentityKey,SignedKey]):
     if isinstance(key_bundle,IdentityKey):
-
         response = verify_identity_key(request,key_bundle)
         return response
     elif isinstance(key_bundle,SignedKey):
@@ -54,14 +56,39 @@ async def publish_key(request:Request,key_bundle:Union[IdentityKey,SignedKey]):
         return response
 
 @app.get("/check-key")
-async def check_key(request:Request,_type:int):
-    response = check_key(request,_type)
+async def _check_key(request:Request,type:int):
+    response = check_key(request,type)
     return response
 @app.get("/profile")
-async def profile(request:Request):
-    response = get_profile(request.state.user_data['username'])
+async def _profile(request:Request):
+    response = get_profile(request)
     return response
 @app.get("/find-friend")
-async def find_friend(request:Request,friend_username:str):
-    response = get_friends(friend_username)
+async def _find_friend(request:Request,username:str):
+    response = get_friends(username)
     return response
+
+@app.post("/add-friend")
+async def _add_friend_relation(request:Request,addFriend:AddFriend):
+    response = add_friend_relation(request,addFriend.username)
+    return response
+
+@app.get("/friend-list")
+async def _get_friend_list(request:Request):
+    response = get_friend_list(request)
+    return response
+
+import json
+
+@app.websocket("/ws")
+async def websocket_endpoint(websocket:WebSocket):
+    token = websocket.query_params.get('authorization')
+    
+    uid = await manager.connect(websocket,token)
+    try:
+        while True:
+            data = await websocket.receive_text()
+            res = await manager.message_handler(data,websocket,uid)
+            await websocket.send_text(res)
+    except:
+        await websocket.send_text("invalid request")

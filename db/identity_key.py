@@ -1,0 +1,42 @@
+from datetime import datetime
+from db.get_max_id import get_max_id
+import db.database as database
+def select_identity_key(uid):
+    db=database.db_connect()
+    conn,cursor=db.get_conn_and_cursor()
+    try:
+        q="SELECT * FROM identity_key WHERE uid=%s"
+        p=(uid,)
+        cursor.execute(q,p)
+        return cursor.fetchall()
+    except Exception as err:
+        print(err)
+        return False
+
+def update_identity_key(uid,key):
+    db=database.db_connect()
+    conn,cursor=db.get_conn_and_cursor()
+    curr = datetime.now()
+    try:
+        q="UPDATE identity_key SET key_value=%s,created_at=%s  WHERE uid=%s"
+        p=(key,str(datetime.now()),uid)
+        cursor.execute(q,p)
+        conn.commit()
+        return True
+    except Exception as err:
+        print(err)
+        return False
+    
+def insert_identity_key(uid,key):
+    db=database.db_connect()
+    conn,cursor=db.get_conn_and_cursor()
+    try:
+        current_time = datetime.now()
+        q="INSERT INTO identity_key VALUES(%s,%s,%s)"
+        p=(uid,key,current_time,)
+        cursor.execute(q,p)
+        conn.commit()
+        return True
+    except Exception as err:
+        print(err)
+        return False

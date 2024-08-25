@@ -23,7 +23,7 @@ def count_one_time_curve_key(uid):
         q="SELECT count(*) FROM one_time_curve_key WHERE uid=%s"
         p=(uid,)
         cursor.execute(q,p)
-        result=cursor.fetchall()
-        return len(result),None
+        result=cursor.fetchall()[0][0]
+        return result,None
     except Exception as err:
         return None,err

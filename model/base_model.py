@@ -3,6 +3,9 @@ from pydantic import BaseModel
 
 class Email(BaseModel):
     email : str
+
+class AddFriend(BaseModel):
+    username : str
     
 class OTP(BaseModel):
     otp : str

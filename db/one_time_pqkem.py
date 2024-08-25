@@ -21,10 +21,11 @@ def count_one_time_pqkem(uid):
     db=database.db_connect()
     conn,cursor=db.get_conn_and_cursor()
     try:
-        q="SELECT * FROM one_time_pq_key WHERE uid=%s"
+        q="SELECT count(*) FROM one_time_curve_key WHERE uid=%s"
         p=(uid,)
         cursor.execute(q,p)
-        temp=cursor.fetchall()
-        return len(temp),None
+        result=cursor.fetchall()[0][0]
+        print(result)
+        return result,None
     except Exception as err:
         return None,err
