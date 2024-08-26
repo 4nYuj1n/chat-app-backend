@@ -1,6 +1,7 @@
 from db.user import select_user
 def get_friends(username):
     response = select_user(username)
+    print(response)
     if response == None:
         return {
             "code" : "500",
