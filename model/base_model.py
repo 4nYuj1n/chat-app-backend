@@ -4,13 +4,13 @@ from pydantic import BaseModel
 class Email(BaseModel):
     email : str
 
-class AddFriend(BaseModel):
+class Username(BaseModel):
     username : str
     
 class OTP(BaseModel):
     otp : str
 
-class User(BaseModel):
+class UserData(BaseModel):
     username : str
     password : str
     profile_image : str

@@ -2,6 +2,18 @@ import db.database as database
 from db.get_max_id import get_max_id
 from datetime import datetime
 
+def select_one_time_pqkem(uid):
+    db=database.db_connect()
+    conn,cursor=db.get_conn_and_cursor()
+    try:
+        q="SELECT * FROM one_time_pq_key WHERE uid=%s LIMIT 1"
+        p=(uid,)
+        cursor.execute(q,p)
+        return cursor.fetchone()
+    except Exception as err:
+        print(err)
+        return None
+
 def insert_one_time_pqkem(uid,key,identifier,signature):
     db=database.db_connect()
     conn,cursor=db.get_conn_and_cursor()
@@ -25,7 +37,6 @@ def count_one_time_pqkem(uid):
         p=(uid,)
         cursor.execute(q,p)
         result=cursor.fetchall()[0][0]
-        print(result)
         return result,None
     except Exception as err:
         return None,err

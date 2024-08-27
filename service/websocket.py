@@ -72,17 +72,20 @@ class ConnectionManager:
         else:
             raise ChannelCreationError(f"Invalid User")
     
-    async def message_handler(self,message_type,message,websocket,uid):
+    async def message_handler(self,data,websocket,uid):
         try:
-            message_type = int(base64.b64decode(message_type))
-            message = base64.b64decode(message)
-        except:
+            message_type = int(data['type'])
+            message = data['message']
+        except Exception as err:
+            print(err)
             await websocket.send_text(f"invalid message")
         
         if message_type == 0:
             await websocket.send_text(f"connection established")
         #create message channel
         if message_type == 1:
+            await websocket.send_text(f"{message}")
+            return
             try:
                 await self.create_channel(message)
                 await websocket.send_text(f"channel created")

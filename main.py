@@ -7,6 +7,7 @@ import auth.register as register
 from middleware.jwt_handler import JWTAuthMiddleware
 from service.key_publish.check_key import check_key
 from service.key_publish.verify_identity_key import verify_identity_key
+from service.key_publish.get_key_bundle import get_key_bundle
 from service.key_publish.verify_key import verify_key
 from service.friends.get_friends import get_friends
 from service.user.profile import get_profile
@@ -37,7 +38,7 @@ async def _otp_verifier(request:Request,otp:OTP):
     return otp_utils.verify_otp(request,otp)
     
 @app.post("/register")
-async def _user_register(request:Request,user:User):
+async def _user_register(request:Request,user:UserData):
     response = register.register_user(request,user)
     return response
 
@@ -54,6 +55,10 @@ async def _publish_key(request:Request,key_bundle:Union[IdentityKey,SignedKey]):
     elif isinstance(key_bundle,SignedKey):
         response = verify_key(request,key_bundle)
         return response
+@app.get("/key-bundle")
+async def _get_key_bundle(request:Request,username:str):
+    response = get_key_bundle(request,username)
+    return response
 
 @app.get("/check-key")
 async def _check_key(request:Request,type:int):
@@ -65,11 +70,11 @@ async def _profile(request:Request):
     return response
 @app.get("/find-friend")
 async def _find_friend(request:Request,username:str):
-    response = get_friends(username)
+    response = get_friends(request.state.user_data['uid'],username)
     return response
 
 @app.post("/add-friend")
-async def _add_friend_relation(request:Request,addFriend:AddFriend):
+async def _add_friend_relation(request:Request,addFriend:Username):
     response = add_friend_relation(request,addFriend.username)
     return response
 
@@ -87,7 +92,10 @@ async def websocket_endpoint(websocket:WebSocket):
     uid = await manager.connect(websocket,token)
     try:
         while True:
+            print(uid)
+
             data = await websocket.receive_text()
+            print('got',data)
             res = await manager.message_handler(data,websocket,uid)
             await websocket.send_text(res)
     except:

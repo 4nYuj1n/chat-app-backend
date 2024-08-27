@@ -27,3 +27,15 @@ def count_one_time_curve_key(uid):
         return result,None
     except Exception as err:
         return None,err
+
+def select_one_time_curve_key(uid):
+    db=database.db_connect()
+    conn,cursor=db.get_conn_and_cursor()
+    try:
+        q="SELECT * FROM one_time_curve_key WHERE uid=%s LIMIT 1"
+        p=(uid,)
+        cursor.execute(q,p)
+        result=cursor.fetchone()
+        return result,None
+    except Exception as err:
+        return None,err
