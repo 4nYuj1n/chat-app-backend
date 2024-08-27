@@ -90,13 +90,12 @@ async def websocket_endpoint(websocket:WebSocket):
     token = websocket.query_params.get('authorization')
     
     uid = await manager.connect(websocket,token)
-    try:
-        while True:
+    while True:
+        try:
             print(uid)
-
             data = await websocket.receive_text()
             print('got',data)
             res = await manager.message_handler(data,websocket,uid)
             await websocket.send_text(res)
-    except:
-        await websocket.send_text("invalid request")
+        except:
+            await websocket.send_text("invalid request")

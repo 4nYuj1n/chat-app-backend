@@ -4,7 +4,7 @@ from service.friends import check_is_friend
 from db.user import select_user_profile
 import base64
 import jwt
-
+import json
 '''
 type of pending event : 
 0 = chatting channel connection
@@ -73,6 +73,7 @@ class ConnectionManager:
             raise ChannelCreationError(f"Invalid User")
     
     async def message_handler(self,data,websocket,uid):
+        data=json.loads(data)
         try:
             message_type = int(data['type'])
             message = data['message']
@@ -85,8 +86,9 @@ class ConnectionManager:
         #create message channel
         if message_type == 1:
             await websocket.send_text(f"{message}")
-            return
             try:
+                return "OK"
+
                 await self.create_channel(message)
                 await websocket.send_text(f"channel created")
             except:
