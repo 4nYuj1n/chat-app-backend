@@ -7,7 +7,8 @@ from db.one_time_curve_key import count_one_time_curve_key,select_one_time_curve
 def get_key_bundle(request,username:str):
     try:
         uid = select_user(username)[0]
-        IK = select_identity_key(uid)[0][1]
+        data =select_identity_key(uid)[0]
+        IK,IKX = data[1],data[2]
         _,SPK,ISPK,SigSPK,_ = select_curve_key(uid)[0]
         if int(count_one_time_pqkem(uid)[0])>0:
             _,_,PQK,IPQK,SigPQK,_ = select_one_time_pqkem(uid)
@@ -20,6 +21,7 @@ def get_key_bundle(request,username:str):
                 "status" : "success",
                 "message" : {
                     "IK" : IK,
+                    "IKX" :IKX,
                     "SPK" : SPK,
                     "ISPK" : ISPK,
                     "SigSPK" : SigSPK,
@@ -36,6 +38,7 @@ def get_key_bundle(request,username:str):
                 "status" : "success",
                 "message" : {
                     "IK" : IK,
+                    "IKX" :IKX,
                     "SPK" : SPK,
                     "ISPK" : ISPK,
                     "SigSPK" : SigSPK,
@@ -44,11 +47,12 @@ def get_key_bundle(request,username:str):
                     "SigPQK" : SigPQK,
                 }
             }
-    except:
+    except Exception as err:
+        print(err)
         return{
             "code" : "500",
             "status" : "failed",
-            "message" : "user not found"
+            "message" : f"user not found"
         }
     
         

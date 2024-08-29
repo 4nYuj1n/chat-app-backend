@@ -11,6 +11,11 @@ def insert_friend_relation(uid1,uid2) -> bool:
         p=(max_id,uid1,uid2,current_time)
         cursor.execute(q,p)
         conn.commit()
+        max_id=get_max_id("friend_relation")
+        q="INSERT INTO friend_relation VALUES(%s,%s,%s,%s)"
+        p=(max_id,uid2,uid1,current_time)
+        cursor.execute(q,p)
+        conn.commit()
         return True
     except Exception as err:
         print(err)
@@ -18,6 +23,7 @@ def insert_friend_relation(uid1,uid2) -> bool:
 
 def select_friend_relation(uid1,uid2=None):
     db=database.db_connect()
+    print(uid1,uid2)
     conn,cursor=db.get_conn_and_cursor()
     try:
         if uid2==None:

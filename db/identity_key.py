@@ -13,13 +13,25 @@ def select_identity_key(uid):
         print(err)
         return False
 
-def update_identity_key(uid,key):
+def select_user_identity(ik):
+    db=database.db_connect()
+    conn,cursor=db.get_conn_and_cursor()
+    try:
+        q="SELECT * FROM identity_key WHERE key_value=%s"
+        p=(ik,)
+        cursor.execute(q,p)
+        return cursor.fetchall()[0]
+    except Exception as err:
+        print(err)
+        return False
+
+def update_identity_key(uid,key,key_x):
     db=database.db_connect()
     conn,cursor=db.get_conn_and_cursor()
     curr = datetime.now()
     try:
-        q="UPDATE identity_key SET key_value=%s,created_at=%s  WHERE uid=%s"
-        p=(key,str(datetime.now()),uid)
+        q="UPDATE identity_key SET key_value=%s,key_value_x=%s,created_at=%s  WHERE uid=%s"
+        p=(key,key_x,str(datetime.now()),uid)
         cursor.execute(q,p)
         conn.commit()
         return True
@@ -27,13 +39,13 @@ def update_identity_key(uid,key):
         print(err)
         return False
     
-def insert_identity_key(uid,key):
+def insert_identity_key(uid,key,key_x):
     db=database.db_connect()
     conn,cursor=db.get_conn_and_cursor()
     try:
         current_time = datetime.now()
-        q="INSERT INTO identity_key VALUES(%s,%s,%s)"
-        p=(uid,key,current_time,)
+        q="INSERT INTO identity_key VALUES(%s,%s,%s,%s)"
+        p=(uid,key,key_x,current_time,)
         cursor.execute(q,p)
         conn.commit()
         return True

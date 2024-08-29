@@ -92,9 +92,8 @@ async def websocket_endpoint(websocket:WebSocket):
     uid = await manager.connect(websocket,token)
     while True:
         try:
-            print(uid)
+            
             data = await websocket.receive_text()
-            print('got',data)
             res = await manager.message_handler(data,websocket,uid)
             await websocket.send_text(res)
         except:

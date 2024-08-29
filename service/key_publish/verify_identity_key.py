@@ -3,10 +3,9 @@ from db.identity_key import select_identity_key,update_identity_key,insert_ident
 import base64
 def verify_identity_key(request,key_bundle):
     try:
-        print("MASUK")
         ed25519.Ed25519PublicKey.from_public_bytes(base64.b64decode(key_bundle.identity_key))
         if len(select_identity_key(request.state.user_data['uid'])) == 0:
-            if insert_identity_key(request.state.user_data['uid'],key_bundle.identity_key):
+            if insert_identity_key(request.state.user_data['uid'],key_bundle.identity_key,key_bundle.identity_key_x):
                 return {
                     "code" : "200",
                     "status" : "success",
@@ -15,7 +14,7 @@ def verify_identity_key(request,key_bundle):
             else:
                 raise Exception
         else:
-            if update_identity_key(request.state.user_data['uid'],key_bundle.identity_key):
+            if update_identity_key(request.state.user_data['uid'],key_bundle.identity_key,key_bundle.identity_key_x):
                return {
                    "code" : "200",
                    "status" : "success",

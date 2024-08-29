@@ -21,6 +21,7 @@ class LoginCreds(BaseModel):
 
 class IdentityKey(BaseModel):
     identity_key:str
+    identity_key_x:str
 
 class SignedKey(BaseModel):
     type:int
