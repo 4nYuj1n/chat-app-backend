@@ -1,8 +1,9 @@
 from db.friend import select_friend_relation
 def check_is_friend(uid1,uid2):
     try:
+        print(uid1,uid2)
         data = select_friend_relation(uid1,uid2)
-        print(data)
+        print('check is friend : ',data)
         if data == None:
             return False
         if len(data) == 0:

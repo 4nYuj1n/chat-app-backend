@@ -46,12 +46,13 @@ class ConnectionManager:
             await websocket.accept()
             self.active_connections[uid]=websocket
             data = select_pending_chat(uid)
-            for i in data:
-                save = json.loads(re.sub("'",'"',i[2]))
-                # print(type(i[2]))
-                print(save)
-                await websocket.send_json(save)
 
+            if len(data):
+                for i in data:
+                    save = json.loads(re.sub("'",'"',i[2]))
+                    # print(type(i[2]))
+                    print(save)
+                    await websocket.send_json(save)
             return uid
         else:
             return None
@@ -71,6 +72,7 @@ class ConnectionManager:
                 user_a,user_b = user_b,user_a
             if check_is_friend(user_a,user_b):
                 if receiver not in self.active_connections:
+                    print("MASOK")
                     insert_pending_chat(receiver,str(message))
                 else:
                     self.active_connections[receiver].send_text(message)
