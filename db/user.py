@@ -30,7 +30,7 @@ def select_user_creds(email,password):
 def select_user_profile(uid):
     db=database.db_connect()
     conn,cursor=db.get_conn_and_cursor()
-    q="SELECT * FROM user WHERE uid = %s"
+    q="SELECT * FROM user LEFT JOIN identity_key ON identity_key.uid = user.uid WHERE user.uid = %s"
     p=(uid,)
     cursor.execute(q,p)
     data=cursor.fetchall()

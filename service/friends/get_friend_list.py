@@ -6,9 +6,12 @@ def get_friend_list(request):
     friend_data= [] 
     for user in data:
         temp = select_user_profile(user[0])
+        print(temp)
         data = {
+            "uid" : temp[0],
             "username" : temp[1],
             "profile_url" : temp[4],
+            "IKX" : temp[8],
         }
         friend_data.append(data)
     if data != None:

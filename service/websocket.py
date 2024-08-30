@@ -4,6 +4,8 @@ from service.friends.check_is_friend import check_is_friend
 from db.user import select_user_profile
 from db.identity_key import select_user_identity
 from db.pending_chat import select_pending_chat,insert_pending_chat
+from datetime import datetime
+import time
 import base64
 import jwt
 import json
@@ -12,7 +14,7 @@ import re
 '''
 type of pending event : 
 0 = chatting channel connection
-1 = sending message to channel
+1 = sending initial message to channel
 '''
 SECRET = "this_is_a_secret_token_indeed"
 
@@ -49,6 +51,7 @@ class ConnectionManager:
 
             if len(data):
                 for i in data:
+                    print(i[2])
                     save = json.loads(re.sub("'",'"',i[2]))
                     # print(type(i[2]))
                     print(save)
@@ -68,10 +71,12 @@ class ConnectionManager:
         try:
             sender = user_a
             receiver = user_b
+            print(sender,receiver)
             if int(user_a,16)>int(user_b,16):
                 user_a,user_b = user_b,user_a
             if check_is_friend(user_a,user_b):
                 if receiver not in self.active_connections:
+                    message["timestamp"] = str(int(time.time()))
                     print("MASOK")
                     insert_pending_chat(receiver,str(message))
                 else:
@@ -84,19 +89,15 @@ class ConnectionManager:
             data=json.loads(data)
             message_type = int(data['type'])
             message = data['message']
+            print(message)
         except Exception as err:
             print(err)
             await websocket.send_text(f"invalid message")
-        
-        if message_type == 0:
-            await websocket.send_text(f"connection established")
-        #create message channel
-        if message_type == 1:
-            try:
-                print("INI WOI")
-                await self.handle_chat(uid,select_user_identity(message['IK'])[0],message)
-                await websocket.send_text(f"successfully sending message")
-
-            except Exception as error:
-                print(error)
-                await websocket.send_text(f"failed sending message")
+        try:
+            print('='*32)
+            print(message['IK'])
+            await self.handle_chat(uid,select_user_identity(message['IK'])[0],message)
+            await websocket.send_text(f"successfully sending message")
+        except Exception as error:
+            print(error)
+            await websocket.send_text(f"failed sending message")
