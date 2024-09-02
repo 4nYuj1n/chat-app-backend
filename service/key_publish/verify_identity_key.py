@@ -14,14 +14,6 @@ def verify_identity_key(request,key_bundle):
             else:
                 raise Exception
         else:
-            # if update_identity_key(request.state.user_data['uid'],key_bundle.identity_key,key_bundle.identity_key_x):
-            #    return {
-            #        "code" : "200",
-            #        "status" : "success",
-            #        "message" : "Key published",
-            #    }
-            
-            # else:
             raise Exception
     except Exception as err:
         print(err)

@@ -7,9 +7,8 @@ from email.mime.text import MIMEText
 from datetime import datetime
 # Add the parent directory to sys.path
 sys.path.insert(0, '../server')
-from db.insert_otp_verify import insert_otp_verify
-from db.select_otp_verify import select_otp_verify 
-from db.delete_otp_verify import delete_otp_verify 
+from db.otp import insert_otp_verify,select_otp_verify,delete_otp_verify,update_otp_verify
+from db.user import select_user_email
 from db.insert_user_register import insert_user_register
 
 
@@ -28,14 +27,27 @@ def send_email(email,OTP):
 
 def send_otp(email):
     try:
-        OTP = random.randint(100000,999999)
-        send_email(email,OTP)
-        if insert_otp_verify(email,OTP)=='OK':
-            return {
-                "code" : "200",
-                "status" : "success",
-                "message" : "Email send successfully",
-            }
+        if select_user_email(email) == None:
+            OTP = random.randint(100000,999999)
+            send_email(email,OTP)
+            if select_otp_verify(email)[0]==None:
+                if insert_otp_verify(email,OTP)=='OK':
+                    return {
+                        "code" : "200",
+                        "status" : "success",
+                        "message" : "Email send successfully",
+                    }
+                else:
+                    raise Exception("failed saving otp")
+            else:
+                if update_otp_verify(email,OTP)=='OK':
+                    return {
+                        "code" : "200",
+                        "status" : "success",
+                        "message" : "Email send successfully",
+                    }
+                else:
+                    raise Exception("failed saving otp")
         else:
             raise Exception("failed saving otp")
 
@@ -60,7 +72,6 @@ def verify_otp(request,otp):
     elif db_otp==otp.otp:
 
         temp = delete_otp_verify(id)
-        print(temp)
         current_time=datetime.now()
         if insert_user_register(email,current_time) =="OK":
             return{

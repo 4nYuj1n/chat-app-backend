@@ -23,8 +23,8 @@ def insert_friend_relation(uid1,uid2) -> bool:
 
 def select_friend_relation(uid1,uid2=None):
     db=database.db_connect()
-    print(uid1,uid2)
     conn,cursor=db.get_conn_and_cursor()
+    print(uid1,uid2,"MARKICCEK")
     try:
         if uid2==None:
             q="SELECT uid2 FROM friend_relation WHERE uid1=%s"

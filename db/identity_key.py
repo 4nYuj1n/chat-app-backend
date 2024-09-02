@@ -18,10 +18,14 @@ def select_user_identity(ik):
     conn,cursor=db.get_conn_and_cursor()
 
     try:
-        q="SELECT * FROM identity_key WHERE key_value_x=%s OR key_value=%s"
-        p=(ik,ik,)
+        q="SELECT * FROM identity_key WHERE key_value_x=%s"
+        p=(ik,)
         cursor.execute(q,p)
-        return cursor.fetchall()[0]
+        temp = cursor.fetchall()
+        print(temp)
+        print(temp[0][0])
+        print("YA BEGINILAH")
+        return temp[0]
     except Exception as err:
         print(err)
         return False

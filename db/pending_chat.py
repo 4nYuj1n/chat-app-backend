@@ -27,3 +27,16 @@ def insert_pending_chat(receiver,message):
     except Exception as err:
         print(err)
         return False
+
+def delete_pending_chat(id):
+    db=database.db_connect()
+    conn,cursor=db.get_conn_and_cursor()
+    try:
+        q="DELETE FROM message_sent WHERE receiver=%s"
+        p=(id,)
+        cursor.execute(q,p)
+        conn.commit()
+        return True
+    except Exception as err:
+        print(err)
+        return False

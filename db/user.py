@@ -13,6 +13,18 @@ def select_user(username):
     else:
         return None
 
+def select_user_email(email):
+    db=database.db_connect()
+    conn,cursor=db.get_conn_and_cursor()
+    q="SELECT * FROM user WHERE email = %s"
+    p=(email,)
+    cursor.execute(q,p)
+    data=cursor.fetchall()
+    if len(data)!=0:
+        data=list(data[0])
+        return data
+    else:
+        return None
 def select_user_creds(email,password):
     db=database.db_connect()
     conn,cursor=db.get_conn_and_cursor()
