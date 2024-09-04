@@ -47,7 +47,7 @@ class ConnectionManager:
                     print(i[2])
                     save = json.loads(re.sub("'",'"',i[2]))
                     data_send.append(save)
-                # delete_pending_chat(uid)
+                delete_pending_chat(uid)
                 await websocket.send_json(data_send[::-1])
             return uid
         else:
@@ -60,7 +60,7 @@ class ConnectionManager:
             if websocket in connections:
                 connections.remove(websocket)
     
-    async def handle_chat(self,user_a,user_b,message):
+    async def handle_chat(self,websocket,user_a,user_b,message):
         try:
             sender = user_a
             receiver = user_b
@@ -69,17 +69,20 @@ class ConnectionManager:
                 user_a,user_b = user_b,user_a
             if check_is_friend(user_a,user_b):
                 message["uid"] = sender
-                print("ORANGNYA OFF")
 
                 if receiver not in self.active_connections:
+                    print("ORANGNYA OFF")
                     message["timestamp"] = str(int(time.time()))
                     print("MASOK")
                     insert_pending_chat(receiver,str(message))
                 else:
                     print("ORANGNYA ON")
                     self.active_connections[receiver].send_text(message)
+                await websocket.send_text(f"successfully sending message")
+                
         except Exception as err:
             print(err)
+            await websocket.send_text(f"failed sending message")
  
     async def message_handler(self,data,websocket,uid):
         try:
@@ -92,11 +95,13 @@ class ConnectionManager:
             await websocket.send_text(f"invalid message")
         try:
             print('='*32)
-            print(message['IK1'])
-            temp = select_user_identity(message['IK2'])
-            print(temp[0])
-            await self.handle_chat(uid,temp[0],message)
-            await websocket.send_text(f"successfully sending message")
+            if message['type'] == '1':
+                print(message['IK1'])
+                temp = select_user_identity(message['IK2'])
+                print(temp[0])
+                await self.handle_chat(websocket,uid,temp[0],message)
+            elif message['type'] == '2':
+                await self.handle_chat(websocket,uid,message['receiver'],message)
         except Exception as error:
             print(error)
             await websocket.send_text(f"failed sending message")
