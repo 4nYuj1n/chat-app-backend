@@ -40,11 +40,9 @@ class ConnectionManager:
             await websocket.accept()
             self.active_connections[uid]=websocket
             data = select_pending_chat(uid)
-            print(uid)
             data_send = []
             if len(data):
                 for i in data:
-                    print(i[2])
                     save = json.loads(re.sub("'",'"',i[2]))
                     data_send.append(save)
                 delete_pending_chat(uid)
@@ -69,10 +67,8 @@ class ConnectionManager:
                 user_a,user_b = user_b,user_a
             if check_is_friend(user_a,user_b):
                 message["uid"] = sender
-
                 if receiver not in self.active_connections:
                     print("ORANGNYA OFF")
-                    message["timestamp"] = str(int(time.time()))
                     print("MASOK")
                     insert_pending_chat(receiver,str(message))
                 else:

@@ -1,0 +1,6 @@
+services:
+  chat-app:
+    container_name: quantum_chat
+    build: .
+    ports: 
+      - "8000:8000"
