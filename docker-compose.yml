@@ -1,4 +1,9 @@
 version: '3.2'
+
+networks:
+    etl_dev:
+        external: true
+        
 services:
   https-portal:
         image:  steveltn/https-portal:1
