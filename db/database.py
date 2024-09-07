@@ -4,7 +4,7 @@ import mysql.connector # type: ignore
 class db_connect:
     def __init__(self):
         self.conn = mysql.connector.connect(
-            host="localhost",
+            host="db",
             user="root",
             password="quantum123",
             database="quantum_chat"
