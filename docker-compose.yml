@@ -1,5 +1,19 @@
 version: '3'
 services:
+  https-portal:
+        image:  steveltn/https-portal:1
+        ports:
+            - "80:80"
+            - "443:443"
+        restart: always
+        environment:
+            DOMAINS:  "localhost -> http://quantum_chat:8090"
+            STAGE:  "production"
+            FORCE_RENEW:  "false"
+        networks:
+            - bridged
+        depends_on:
+            - "chat-app"
   chat-app:
     container_name: quantum_chat
     build: .
