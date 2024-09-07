@@ -5,8 +5,8 @@ services:
   https-portal:
         image:  steveltn/https-portal:1
         ports:
-            - "80:80"
-            - "443:443"
+            - "8095:80"
+            - "8096:443"
         restart: always
         environment:
             DOMAINS:  "localhost -> http://quantum_chat:8090"
