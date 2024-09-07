@@ -13,5 +13,5 @@ services:
     volumes:
     - ./db_backup.sql:/docker-entrypoint-initdb.d/dump.sql
     environment::
-    - MYSQL_ROOT_PASSWORD=quantum123
-    - MYSQL_DATABASE=quantum_chat
+      MYSQL_ROOT_PASSWORD=quantum123
+      MYSQL_DATABASE=quantum_chat
