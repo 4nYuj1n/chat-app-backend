@@ -3,4 +3,4 @@ services:
     container_name: quantum_chat
     build: .
     ports: 
-      - "8000:8000"
+      - "8090:8090"
