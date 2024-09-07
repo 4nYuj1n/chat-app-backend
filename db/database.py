@@ -6,7 +6,7 @@ class db_connect:
         self.conn = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="",
+            password="quantum123",
             database="quantum_chat"
         )
         self.cursor=self.conn.cursor()
