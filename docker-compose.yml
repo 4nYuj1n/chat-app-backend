@@ -10,8 +10,13 @@ services:
     container_name: quantum_db
     ports:
     - "3306:3306"
-    volumes:
-    - ./db_backup.sql:/docker-entrypoint-initdb.d/dump.sql
     environment::
       MYSQL_ROOT_PASSWORD=quantum123
       MYSQL_DATABASE=quantum_chat
+    volumes:
+    - ./db_backup.sql:/docker-entrypoint-initdb.d/dump.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 1s
+      timeout: 20s
+      retries: 20
