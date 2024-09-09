@@ -5,6 +5,7 @@ import os
 import secrets
 from email.mime.text import MIMEText
 from datetime import datetime
+
 # Add the parent directory to sys.path
 sys.path.insert(0, '../server')
 from db.otp import insert_otp_verify,select_otp_verify,delete_otp_verify,update_otp_verify
@@ -13,7 +14,7 @@ from db.insert_user_register import insert_user_register
 
 
 def send_email(email,OTP):
-        sender_email="lala@mail.id"
+        sender_email="quantum_chat@mail.id"
         receiver_email=email
         with smtplib.SMTP('localhost', 1025) as smtpServer:    
             text=f"""
