@@ -67,6 +67,7 @@ class ConnectionManager:
                 user_a,user_b = user_b,user_a
             if check_is_friend(user_a,user_b):
                 message["uid"] = sender
+                message["timestamp"] = str(time.time())
                 if receiver not in self.active_connections:
                     print("ORANGNYA OFF")
                     print("MASOK")
@@ -82,6 +83,7 @@ class ConnectionManager:
  
     async def message_handler(self,data,websocket,uid):
         try:
+            print("OK",data)
             data=json.loads(data)
             message_type = int(data['type'])
             message = data['message']
