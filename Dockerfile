@@ -9,4 +9,4 @@ RUN rm -rf .git
 
 EXPOSE 8090
 
-CMD ["uvicorn","main:app","--port","8090","--host","0.0.0.0"]
+CMD ["uvicorn","main:app","--port","8090"]
