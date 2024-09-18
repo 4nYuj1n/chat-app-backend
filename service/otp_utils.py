@@ -5,26 +5,50 @@ import os
 import secrets
 from email.mime.text import MIMEText
 from datetime import datetime
+from mailjet_rest import Client
 
 # Add the parent directory to sys.path
 sys.path.insert(0, '../server')
 from db.otp import insert_otp_verify,select_otp_verify,delete_otp_verify,update_otp_verify
 from db.user import select_user_email
 from db.insert_user_register import insert_user_register
-
-
+api_key="0109297878137ff25416c6ad19768f60"
+secret_key="023f983f5772a4097a3a571dc5e5cae2"
+mailjet = Client(auth=(api_key, secret_key), version='v3.1')
 def send_email(email,OTP):
-        sender_email="quantum_chat@mail.id"
-        receiver_email=email
-        with smtplib.SMTP('localhost', 1025) as smtpServer:    
-            text=f"""
-            your OTP is {OTP}
-            """
-            message = MIMEText(text, "plain")
-            message["Subject"] = "Plain text email"
-            message["From"] = sender_email
-            message["To"] = receiver_email
-            smtpServer.sendmail(sender_email,receiver_email,message.as_string())
+    sender_email="kimmm.muhammad@gmail.com"
+    receiver_email=email
+    data = {
+    'Messages': [
+    {
+      "From": {
+        "Email": sender_email,
+        "Name": sender_email,
+      },
+      "To": [
+        {
+          "Email": receiver_email,
+          "Name":  receiver_email,
+        }
+      ],
+      "Subject": "OTP Verification",
+      "TextPart": str(OTP),
+    #   "HTMLPart": "<h3>Dear passenger 1, welcome to <a href=\"https://www.mailjet.com/\">Mailjet</a>!</h3><br />May the delivery force be with you!"
+    }
+    ]
+    }
+    result = mailjet.send.create(data=data)
+    print(result.status_code)
+    print(result.json())
+    # with smtplib.SMTP('localhost', 1025) as smtpServer:    
+    #     text=f"""
+    #     your OTP is {OTP}
+    #     """
+    #     message = MIMEText(text, "plain")
+    #     message["Subject"] = "Plain text email"
+    #     message["From"] = sender_email
+    #     message["To"] = receiver_email
+    #     smtpServer.sendmail(sender_email,receiver_email,message.as_string())
 
 def send_otp(email):
     try:
