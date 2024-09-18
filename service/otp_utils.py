@@ -12,7 +12,8 @@ sys.path.insert(0, '../server')
 from db.otp import insert_otp_verify,select_otp_verify,delete_otp_verify,update_otp_verify
 from db.user import select_user_email
 from db.insert_user_register import insert_user_register
-
+api_key="a5f9e589bfbc34f2509b36f8b0add1a8"
+secret_key="916b0bbb05a773e54611de92e4ed4ac1"
 mailjet = Client(auth=(api_key, secret_key), version='v3.1')
 def send_email(email,OTP):
     sender_email="jossie@tennet.id"
